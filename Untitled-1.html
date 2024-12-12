@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра "Угадай число"</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .game-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .input-container {
+            margin-top: 20px;
+        }
+        input {
+            padding: 8px;
+            font-size: 16px;
+            margin-right: 10px;
+            width: 60px;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>Игра "Угадай число"</h1>
+    <p>Я загадал число от 1 до 100. Попробуйте угадать его!</p>
+
+    <div class="input-container">
+        <input type="number" id="guess" placeholder="Число" min="1" max="100">
+        <button onclick="makeGuess()">Попробовать</button>
+    </div>
+
+    <div class="message" id="message"></div>
+</div>
+
+<script>
+    // Загаданное число
+    const numberToGuess = Math.floor(Math.random() * 100) + 1;
+    let attempts = 0;
+
+    // Асинхронная функция для обработки ввода пользователя
+    async function makeGuess() {
+        const guessInput = document.getElementById('guess');
+        const messageElement = document.getElementById('message');
+        const guess = parseInt(guessInput.value, 10);
+
+        // Если введено не число
+        if (isNaN(guess)) {
+            messageElement.textContent = "Пожалуйста, введите число!";
+            return;
+        }
+
+        attempts++;
+
+        // Проверка на правильность числа
+        if (guess < numberToGuess) {
+            messageElement.textContent = `Слишком мало! Попробуйте еще раз. (Попытка №${attempts})`;
+        } else if (guess > numberToGuess) {
+            messageElement.textContent = `Слишком много! Попробуйте еще раз. (Попытка №${attempts})`;
+        } else {
+            messageElement.textContent = `Поздравляем! Вы угадали число за ${attempts} попыток.`;
+        }
+
+        // Очищаем поле ввода после каждой попытки
+        guessInput.value = '';
+        guessInput.focus();
+
+        // Делаем небольшую задержку, чтобы дать время на отображение сообщения
+        await new Promise(resolve => setTimeout(resolve, 500));
+    }
+</script>
+
+</body>
+</html>
